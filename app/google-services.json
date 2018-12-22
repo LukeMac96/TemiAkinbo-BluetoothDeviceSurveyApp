@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "179012983079",
+    "firebase_url": "https://btdevicesurvey.firebaseio.com",
+    "project_id": "btdevicesurvey",
+    "storage_bucket": "btdevicesurvey.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:179012983079:android:368a4ec9918c25df",
+        "android_client_info": {
+          "package_name": "com.example.temi.bluetoothdevicesurveyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "179012983079-86c0vvbu6064n05jfvrjcbcah0njmgkt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiXA1E0CNfCeZgJbDbLh27iyQ6nofocJU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
