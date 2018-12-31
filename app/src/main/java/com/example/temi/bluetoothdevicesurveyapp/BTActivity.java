@@ -1,31 +1,15 @@
 package com.example.temi.bluetoothdevicesurveyapp;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Set;
 /*
 Displays a list of unique Devices previously detected from the database
  */
@@ -51,6 +35,7 @@ public class BTActivity extends Activity{
 
         getUniqueDevices();
 
+        //Use ArrayAdapter to populate listView with contents of UniqueDevices ArrayList
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
           this,
                 android.R.layout.simple_list_item_1,
@@ -61,6 +46,7 @@ public class BTActivity extends Activity{
 
      }
 
+     //Goes through DB entries and adds unique bluetooth devices to UniqueDevices ArrayList
      private void getUniqueDevices(){
          final DatabaseReference ref = mDataBaseReference.child("locations").getRef();
 

@@ -1,5 +1,6 @@
 package com.example.temi.bluetoothdevicesurveyapp;
 
+//Wrapper to hold details of bluetooth devices discovered
 public class DeviceItem {
 
     private String deviceName;

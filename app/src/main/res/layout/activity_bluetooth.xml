@@ -9,8 +9,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bluetooth Devices List"
-        android:textAlignment="center"/>
+        android:text="Bluetooth Devices Discovered"
+        android:textAlignment="center"
+        android:textSize="10pt" />
 
     <ListView
         android:id="@+id/devicesTextView"

@@ -1,14 +1,7 @@
 package com.example.temi.bluetoothdevicesurveyapp;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,8 +11,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.*;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -31,7 +22,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FirebaseDatabase mDataBase;
     private DatabaseReference mDataBaseReference;
-    private static final String TAG = "#MapsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,14 +66,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 for (DataSnapshot locSnapshot : dataSnapshot.getChildren()) {
                     LocationData loc = locSnapshot.getValue(LocationData.class);
                     long timeMiliSeconds = Long.parseLong(locSnapshot.getKey());
-                    //create date object using miliseconds and get a string in expected format
+                    //create date object using milliseconds and get a string in expected format
                     Date date = new Date(timeMiliSeconds);
                     String title = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(date) + " Number of Devices: " + loc.bluetoothDevices.size();
 
-                    //System.out.println(post);
                     if (loc != null) {
-                        // App 2: Todo: Add a map marker here based on the loc downloaded
-
                         mMap.addMarker(new MarkerOptions()
                                 .position(new LatLng(loc.latitude, loc.longitude))
                                 .title(title)

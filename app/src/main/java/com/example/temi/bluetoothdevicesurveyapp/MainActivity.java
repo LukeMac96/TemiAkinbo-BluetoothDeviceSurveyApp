@@ -12,9 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 public class MainActivity extends Activity {
 
     private BluetoothAdapter mBluetoothAdapter;
@@ -34,6 +31,7 @@ public class MainActivity extends Activity {
         startService(new Intent(this, GPSService.class));
     }
 
+    // Method called when 'Map' Button in View clicked
     public void onGetMapActivityClick(View view){
 
         Intent getScreenIntent = new Intent(this, MapsActivity.class);
@@ -42,6 +40,7 @@ public class MainActivity extends Activity {
 
     }
 
+    // Method called when 'BTDevices' Button in View clicked
     public void onGetBTDevicesActivityClick(View view){
 
         Intent getScreenIntent = new Intent(this, BTActivity.class);
@@ -49,6 +48,7 @@ public class MainActivity extends Activity {
         startActivity(getScreenIntent);
     }
 
+    //Get Location Permissions from user
     public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -89,6 +89,7 @@ public class MainActivity extends Activity {
         }
     }
 
+    //Turn on Bluetooth
     public void enableBluetooth() {
 
         if(!mBluetoothAdapter.isEnabled()){

@@ -3,6 +3,7 @@ package com.example.temi.bluetoothdevicesurveyapp;
 
 import java.util.ArrayList;
 
+//Wrapper class to hold location data i.e. longitude and latitude coordinates, and a list of the devices discovered in the location
 public class LocationData {
     public double longitude;
     public double latitude;

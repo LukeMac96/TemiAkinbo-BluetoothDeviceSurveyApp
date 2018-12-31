@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationManager;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -20,7 +19,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.util.ArrayList;
-import java.util.Set;
 
 
 public class GPSService extends Service implements android.location.LocationListener {
@@ -50,7 +48,9 @@ public class GPSService extends Service implements android.location.LocationList
                 String timeStamp = Long.toString(System.currentTimeMillis());
                 mDBRef.child(timeStamp).setValue(obj);
                 Log.e(TAG, "OnReceive: ACTION DISCOVERY FINISHED.");
-                Log.e(TAG, "Location logged:  "+ obj.latitude + " " + obj.longitude + " number of devices: " + obj.bluetoothDevices);
+                Log.e(TAG, "Location logged:  "+ obj.latitude + " " + obj.longitude + " number of devices: " + obj.bluetoothDevices.size());
+
+                mBluetoothDevices.clear();
             }
 
             //if device discovered add to BluetoothDevices ArrayList as deviceItem object
@@ -58,6 +58,7 @@ public class GPSService extends Service implements android.location.LocationList
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 DeviceItem deviceItem = new DeviceItem(device.getName(), device.getAddress());
+
                 mBluetoothDevices.add(deviceItem);
 
                 Log.e(TAG, "onReceive: " + device.getName() + ": " + device.getAddress());
@@ -75,21 +76,27 @@ public class GPSService extends Service implements android.location.LocationList
     public void onCreate() {
         Log.e(TAG,"onCreate");
 
+        // instance of DB to upload new location data to
         mDBRef = FirebaseDatabase.getInstance().getReference("locations");
+        //location manager used to access phones location services
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // Bluetooth adapter used to access phones bluetooth functions
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        // new instance of ArrayList to hold bluetooth devices
+        mBluetoothDevices = new ArrayList<>();
 
+        // Update location every 15 minutes and if moved by 1000 meters
         try {
             if(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 lm.requestLocationUpdates(lm.NETWORK_PROVIDER,
-                        30000,
-                        100,
+                        60000*15,
+                        1000,
                         this);
             }
             else if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
                 lm.requestLocationUpdates(lm.GPS_PROVIDER,
-                        30000,
-                        100,
+                        60000*15,
+                        1000,
                         this);
             }
 
@@ -122,10 +129,10 @@ public class GPSService extends Service implements android.location.LocationList
         mBluetoothAdapter.cancelDiscovery();
     }
 
+    //When location changes start bluetooth discovery
     @Override
     public void onLocationChanged(Location location) {
-
-        mBluetoothDevices = new ArrayList<>();
+        //
         loc = location;
 
         Log.d(TAG, "btnDiscover: Looking for unpaired devices. ");
