@@ -7,40 +7,86 @@ import android.os.Bundle;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.Set;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Set;
+/*
+Displays a list of unique Devices previously detected from the database
+ */
 public class BTActivity extends Activity{
 
-    private BluetoothAdapter BTAdapter;
-    private TextView mDevicesList;
+    private FirebaseDatabase mDataBase;
+    private DatabaseReference mDataBaseReference;
+    private ListView mDevicesList;
+    private ArrayList<String> mUniqueDevices;
 
-    private static final int REQUEST_ENABLE_BT = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
 
-        mDevicesList = findViewById(R.id.devicesTextView);
+        mUniqueDevices = new ArrayList<>();
 
-        //adapter
-        BTAdapter = BluetoothAdapter.getDefaultAdapter();
+        mDataBase = FirebaseDatabase.getInstance();
+        mDataBaseReference = mDataBase.getReference();
 
-        //check if bluetooth is on if not turn on
-        if(!BTAdapter.isEnabled()){
-            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivity(intent);
-        }
+        mDevicesList = (ListView) findViewById(R.id.devicesTextView);
 
-        if(BTAdapter.isEnabled()) {
-            Set<BluetoothDevice> devices = BTAdapter.getBondedDevices();
-            for (BluetoothDevice device : devices){
-                mDevicesList.append("\n" + device.getName());
-            }
-        }
+        getUniqueDevices();
 
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+          this,
+                android.R.layout.simple_list_item_1,
+                mUniqueDevices
+        );
 
-    }
+        mDevicesList.setAdapter(arrayAdapter);
+
+     }
+
+     private void getUniqueDevices(){
+         final DatabaseReference ref = mDataBaseReference.child("locations").getRef();
+
+         // Attach a listener to read the data at our posts reference
+         ref.addValueEventListener(new ValueEventListener() {
+             @Override
+             public void onDataChange(DataSnapshot dataSnapshot) {
+                 for (DataSnapshot locSnapshot : dataSnapshot.getChildren()) {
+                     LocationData loc = locSnapshot.getValue(LocationData.class);
+
+                     if(loc != null) {
+                         for (DeviceItem item : loc.bluetoothDevices) {
+                             if (!mUniqueDevices.contains(item.getDeviceName())){
+                                 mUniqueDevices.add(item.getDeviceName());
+                             }
+                         }
+
+                     }
+
+                 }
+             }
+
+             @Override
+             public void onCancelled(DatabaseError databaseError) {
+                 System.out.println("The read failed: " + databaseError.getCode());
+             }
+         });
+     }
 }

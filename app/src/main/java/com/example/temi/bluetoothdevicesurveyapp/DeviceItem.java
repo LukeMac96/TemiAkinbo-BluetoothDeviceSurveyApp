@@ -9,6 +9,8 @@ public class DeviceItem {
 
     public String getAddress() {return address;}
 
+    public DeviceItem(){}
+
     public DeviceItem(String name, String address ) {
         this.deviceName = name;
         this.address = address;
